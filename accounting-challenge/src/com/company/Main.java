@@ -3,10 +3,9 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-public class Main {
+public class Main<getCustomerData> {
 
     private static List<String[]> customerData = Arrays.asList(
             new String[] {"1","Wayne Enterprises","10000","12-01-2021"},
@@ -33,47 +32,60 @@ public class Main {
         List<Customer> customers = new ArrayList<>();
         List<Integer> id = new ArrayList<>();
 
+        List<Customer> positiveCustomers = null;
+        List<Customer> negativeCustomers = null;
 
-        for(String[] customerRecord : customerData) {
 
-            int currID = Integer.parseInt(customerRecord[0]);
-
+        for (String[] custData : customerData) {
+            int currID = Integer.parseInt(custData[0]);
             if (id.contains(currID)) {
                 for (Customer cust : customers) {
                     if (cust.getId() == currID) {
-                        //update existing information
-                        Customer customer = customers.get(customers.indexOf(cust));
+                        // Update Existing customer account record
+                        Customer exCustomer = customers.get(customers.indexOf(cust));
                         AccountRecord accountRecord = new AccountRecord();
-                        accountRecord.setCharge(Integer.parseInt(customerRecord[2]));
-                        accountRecord.setChargeDate(customerRecord[3]);
-                        customer.getCharges().add(accountRecord);
-
+                        accountRecord.setCharge(Integer.parseInt(custData[2]));
+                        accountRecord.setChargeDate(custData[3]);
+                        exCustomer.getCharges().add(accountRecord);
                     }
-
                 }
             } else {
                 id.add(currID);
 
-                // Create Customer
+                // Create customer
                 Customer customer = new Customer();
-                id.add(Integer.parseInt(customerRecord[0]));
-                customer.setName(customerRecord[1]);
+                customer.setId(Integer.parseInt(custData[0]));
+                customer.setName(custData[1]);
 
-
+                //Create accountRecord
                 AccountRecord accountRecord = new AccountRecord();
-                accountRecord.setCharge(Integer.parseInt(customerRecord[2]));
-                accountRecord.setChargeDate(customerRecord[3]);
+                accountRecord.setCharge(Integer.parseInt(custData[2]));
+                accountRecord.setChargeDate(custData[3]);
 
                 customer.getCharges().add(accountRecord);
 
+                //Add Customer
                 customers.add(customer);
-
-
             }
+             positiveCustomers = new ArrayList<>();
+             negativeCustomers = new ArrayList<>();
 
-
-
+            for (Customer cust: customers) {
+                if (cust.getBalance() >= 0) {
+                    positiveCustomers.add(cust);
+                } else {
+                    negativeCustomers.add(cust);
+                }
+            }
         }
+        System.out.println("Printing out all positive accounts");
+        System.out.println(positiveCustomers);
+        System.out.println();
+
+        System.out.println("Printing out all negative accounts");
+        System.out.println(negativeCustomers);
+        System.out.println();
+
 
 
     }
